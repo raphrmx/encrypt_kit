@@ -1,6 +1,9 @@
+// Examples print their results.
+// ignore_for_file: avoid_print
+
 import 'dart:typed_data';
 
-import 'package:encrypt/encrypt.dart';
+import 'package:encrypt_plus/encrypt.dart';
 
 void main() {
   final salt = Uint8List(16);

@@ -1,0 +1,76 @@
+// Test keys mirrored from the test/*.pem files, so that the tests also run
+// on the web where dart:io is not available. Test-only, not secret.
+// ignore_for_file: lines_longer_than_80_chars
+
+/// Content of `test/public.pem`.
+const publicPem = '''
+-----BEGIN PUBLIC KEY-----
+MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCzoN1rGpG4oIam1m2fup1ruY5e
+nRGxF9KJtnhc2XZZoTn2mRz+oqFJEvgN0DsfNrjpAJRModM9qHFx4u2wEZgSjHvI
+2IgVp0t5R2Ji/v3bwwcYKy9MUhL6Qp24EYyi6awh8uK8BovNCM7IzWFOgBxTtOJ8
+oBUkko01QfIIG+uoAQIDAQAB
+-----END PUBLIC KEY-----
+''';
+
+/// Content of `test/private.pem`.
+const privatePem = '''
+-----BEGIN RSA PRIVATE KEY-----
+MIICWwIBAAKBgQCzoN1rGpG4oIam1m2fup1ruY5enRGxF9KJtnhc2XZZoTn2mRz+
+oqFJEvgN0DsfNrjpAJRModM9qHFx4u2wEZgSjHvI2IgVp0t5R2Ji/v3bwwcYKy9M
+UhL6Qp24EYyi6awh8uK8BovNCM7IzWFOgBxTtOJ8oBUkko01QfIIG+uoAQIDAQAB
+An8l48jQzsnuJ+4/QvvctYB/OKTPUFJrCJtgcRzyeOx9+4Q+gA2dqLBcuaOZRlMy
+Qli+zWB6yafFWcKUQ0nf2dY5t86wubsSAaHrSMDCASjLIJJeVDEqPe+Gj+w3RAXw
+vb8MW4l7I9T3sSRukn0CnIhGU0KT8+znTHQrAvxNFFbZAkEA+yyTC2FSEGrGqKEx
+Vao0ZBegnyoWIN26Xyh+i0c1mZKYHNw363NbMIo3VLQRrnQ08OzXNXE4pxKH+ACN
+s1wAjwJBALcUYq619D42YmwpSoPLIUWAFHZmbQYQbO+N+wBlopP0nE6CimC5HsTI
+uMAqefnAXRIEU9CM5h3u+6zFVCyi9m8CQQD4JXqEtLppw8POl6nw8z3dYUZr2R2R
+jN1y48PZgBmhRqYHZT3N3OLLmtG9WkVZsC8ZkzOu9dO9o943EvzrpUpbAkEAliv9
+iiusDX/Umb4A5jwvrW+S2U/I6+l7QcBne/riMZS6xddkJFSUvXubt9zfspIshYPR
+MEby1ujZve0az4ZYtwJAa00wn3MncsMiYkwmPIqIruAT5AMkTHLGhddaEFmuQ/kP
+xrVrCDQlcV53PNeRoldVb2YSXu58gMeI/SOQIgKMzw==
+-----END RSA PRIVATE KEY-----
+''';
+
+/// Content of `test/public2048.pem`.
+const public2048Pem = '''
+-----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxUxNceds2gyqbbYiEZF8
+WTxfPQ+YgTzyJASSoOPmv4Tso56CoRy+cFdKQ0ZcLpLaH6E+VB9P/hrCswpA4bwA
+adFXm4k6X2VH4O/RnVR29wklhwhOljFAzAZi5s1ROYvAAhuT9qxBmQWNuLWOHuVp
+G1zXa7wfWwWFjuEfEYrhsEY6IpDvSRFF04ykhvW+AnphAkCLl+wYVHfub56v0aYN
+6Y13X6nBciGDIPazyGgzQvDUR3Rm7sZbjbhPLmaAX8UFiYtAzs6Ya/hJb7Q0/cgf
+6LrkBGVDxTWZb+lMW7E61Uc14E4qIhc2BWjDgugPJnWP8MA39oh+opyRQSBU9TuE
+NwIDAQAB
+-----END PUBLIC KEY-----
+''';
+
+/// Content of `test/private2048.pem`.
+const private2048Pem = '''
+-----BEGIN RSA PRIVATE KEY-----
+MIIEpQIBAAKCAQEAxUxNceds2gyqbbYiEZF8WTxfPQ+YgTzyJASSoOPmv4Tso56C
+oRy+cFdKQ0ZcLpLaH6E+VB9P/hrCswpA4bwAadFXm4k6X2VH4O/RnVR29wklhwhO
+ljFAzAZi5s1ROYvAAhuT9qxBmQWNuLWOHuVpG1zXa7wfWwWFjuEfEYrhsEY6IpDv
+SRFF04ykhvW+AnphAkCLl+wYVHfub56v0aYN6Y13X6nBciGDIPazyGgzQvDUR3Rm
+7sZbjbhPLmaAX8UFiYtAzs6Ya/hJb7Q0/cgf6LrkBGVDxTWZb+lMW7E61Uc14E4q
+Ihc2BWjDgugPJnWP8MA39oh+opyRQSBU9TuENwIDAQABAoIBAQC848hhfMdiGy4v
+y2fimf8LEBm+Q+gmE0tf4GDhWE/anFBSdbdquDI7K9cVgY9Pp5jdH2qk7zWOeeBd
+uTtU4sEijiHp7v/LxROD7xYoIm2jJUagePuEH7OBobuebIOPLJSvb+fBCjnjXsXI
+SUm/mrN+VuyHYJxEcIzltfIgwW5Ba8rvKhOnmOyCJ0nLURLzkk9DUlwJbPWKtj0A
+wGo5cZgQZGzRI3D7XfZ8M48RJIqEAUYR59xEf9eKkxdyKtVYHYVEhd9fmWWv83Tp
+J9ppgjt305cR8u1v1c/z6IiHUy2rHBdddCTD/p2clADw5YzckKaIY75slLt1d4y3
+dtzCWRfBAoGBAPSICOQkc30NabdzX4Lx+8UpU8v8fffdqHDt3BCtiaGnjhiSOw7l
+a2oSlEAm1RUXQW9sNv+wuMmL1bSF3aSG3csIXLq78n9tUllcSQpmt3NM6E76dFSR
+KIwCpnV4yMCSCBhO/Up9lqJfimc2vzzfL0fx39iY+phLIdnGtqAweGHLAoGBAM6N
+KTYO/VbQLJquW1JRdeHWoiJ+HWkwSpyVttOFhw2woXmLh7EFOYBSdudrs/jT3dVB
+739pSPWuiwVv1CFDAYwpuY6BWE5bRwglUaB7dwPIguk6mZ+U6jnPmusPDkFHe45E
+7DN2h9D/yWpYeJqmdu+JET2EDqqqcH3GDyTZ9GnFAoGBAJ9jpFgBIn4aphP70f/q
+dy+2lnZaKEnOY6LoiA8e7p0+ODLv7irxg6hqX9PI/A95Tx+vq9HSgUBuM2gt8aDy
+f9N9qePV6mUA/zJcIwfymBVBxhLk0brlu0Y33ASqLEDJbxlZM2TAo9VG7VIFr3Wg
+DJOap0vpuz5VisUG77dOoMktAoGAQCYzQGjTYZzx3XB9SEmodOV2IYRNmhe3dH5C
+89qqoSPUYq1lDSN0QlhaOXGHyaXzZYI+4bFPSY5V+vBKT7JBzsg+qvWc+Wj73JnK
+ii8OPYyOq+TZRWi4fg/uK0bXxIpw4zSgrzMG53Apm++yNUWx9p75TcOv0m1w1n8m
+wOk4MYkCgYEAy9UIMOc+eU4g8XIPMxhXRBB2aDwoyv9lV67PWF9EqUnpCHukyznQ
+87GOb2wxotTpOgjXIiOk6jYbsnSZyk8mogsoN4CxoPghtpadnl2HunJzprd5RbqC
+x8JW1M8dg6ygqnOWlx3rD+mBMCRXXnG67qr+6WrlJtTnnl144YWQC94=
+-----END RSA PRIVATE KEY-----
+''';

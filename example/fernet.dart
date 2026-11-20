@@ -1,13 +1,16 @@
+// Examples print their results.
+// ignore_for_file: avoid_print
+
 import 'dart:convert';
 
-import 'package:encrypt/encrypt.dart';
+import 'package:encrypt_plus/encrypt.dart';
 
 void main() {
-  final plainText = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit';
+  const plainText = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit';
   final key = Key.fromUtf8('my32lengthsupersecretnooneknows1');
 
   final b64key = Key.fromBase64(base64Url.encode(key.bytes));
-  // if you need to use the ttl feature, you'll need to use APIs in the algorithm itself
+  // For the ttl feature, call `fernet.decrypt(encrypted, ttl: 60)` directly.
   final fernet = Fernet(b64key);
   final encrypter = Encrypter(fernet);
 
@@ -15,6 +18,6 @@ void main() {
   final decrypted = encrypter.decrypt(encrypted);
 
   print(decrypted); // Lorem ipsum dolor sit amet, consectetur adipiscing elit
-  print(encrypted.base64); // random cipher text
+  print(encrypted.base64Url); // random token, Python compatible
   print(fernet.extractTimestamp(encrypted.bytes)); // unix timestamp
 }

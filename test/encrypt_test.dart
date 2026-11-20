@@ -1,10 +1,14 @@
+// Test vectors are long base 64 strings.
+// ignore_for_file: lines_longer_than_80_chars
+
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:clock/clock.dart';
-import 'package:encrypt/encrypt.dart';
+import 'package:encrypt_plus/encrypt.dart';
 import 'package:pointycastle/asymmetric/api.dart';
 import 'package:test/test.dart';
+
+import 'fixtures/keys.dart';
 
 void main() {
   const text = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit';
@@ -22,7 +26,8 @@ void main() {
     final fernet = Fernet(key, clock: Clock.fixed(currentDateTime));
     final encrypter = Encrypter(fernet);
     final encrypted = Encrypted.fromBase64(
-        'gAAAAABdSZ/GAAAAAAAAAAAAAAAAAAAAACxNe+/PVLJMTKmBdPrlHat3Bj32TYdt1EKCz2jlJykTrwtMgSuZdLGXAIkmResqHLA5g0k7kzOCdHe02noK7YmV75oA2sLjSTE1zao/jtEdEB/aebAOYKQW8ZEm33oyXA==');
+      'gAAAAABdSZ/GAAAAAAAAAAAAAAAAAAAAACxNe+/PVLJMTKmBdPrlHat3Bj32TYdt1EKCz2jlJykTrwtMgSuZdLGXAIkmResqHLA5g0k7kzOCdHe02noK7YmV75oA2sLjSTE1zao/jtEdEB/aebAOYKQW8ZEm33oyXA==',
+    );
     final iv = IV.allZerosOfLength(16);
 
     test('encrypt', () {
@@ -59,13 +64,17 @@ void main() {
         final encrypted = Encrypted(base64.decode(encoded));
 
         test('encrypt', () {
-          expect(encrypter.encrypt(text, iv: IV.allZerosOfLength(16)),
-              equals(encrypted));
+          expect(
+            encrypter.encrypt(text, iv: IV.allZerosOfLength(16)),
+            equals(encrypted),
+          );
         });
 
         test('decrypt', () {
-          expect(encrypter.decrypt(encrypted, iv: IV.allZerosOfLength(16)),
-              equals(text));
+          expect(
+            encrypter.decrypt(encrypted, iv: IV.allZerosOfLength(16)),
+            equals(text),
+          );
         });
       });
     });
@@ -90,13 +99,16 @@ void main() {
 
         test('encrypt', () {
           expect(
-              encrypter.encrypt(text.padRight(64), iv: IV.allZerosOfLength(16)),
-              equals(encrypted));
+            encrypter.encrypt(text.padRight(64), iv: IV.allZerosOfLength(16)),
+            equals(encrypted),
+          );
         });
 
         test('decrypt', () {
-          expect(encrypter.decrypt(encrypted, iv: IV.allZerosOfLength(16)),
-              equals(text.padRight(64)));
+          expect(
+            encrypter.decrypt(encrypted, iv: IV.allZerosOfLength(16)),
+            equals(text.padRight(64)),
+          );
         });
       });
     });
@@ -113,13 +125,17 @@ void main() {
           final encrypted = Encrypted(base64.decode(encoded));
 
           test('encrypt', () {
-            expect(encrypter.encrypt(text, iv: IV.allZerosOfLength(16)),
-                equals(encrypted));
+            expect(
+              encrypter.encrypt(text, iv: IV.allZerosOfLength(16)),
+              equals(encrypted),
+            );
           });
 
           test('decrypt', () {
-            expect(encrypter.decrypt(encrypted, iv: IV.allZerosOfLength(16)),
-                equals(text));
+            expect(
+              encrypter.decrypt(encrypted, iv: IV.allZerosOfLength(16)),
+              equals(text),
+            );
           });
         });
       });
@@ -134,22 +150,26 @@ void main() {
     final encrypted = Encrypted(base64.decode(encoded));
 
     test(
-        'encrypt',
-        () => expect(encrypter.encrypt(text, iv: IV.allZerosOfLength(8)),
-            equals(encrypted)));
+      'encrypt',
+      () => expect(
+        encrypter.encrypt(text, iv: IV.allZerosOfLength(8)),
+        equals(encrypted),
+      ),
+    );
 
     test(
-        'decrypt',
-        () => expect(encrypter.decrypt(encrypted, iv: IV.allZerosOfLength(8)),
-            equals(text)));
+      'decrypt',
+      () => expect(
+        encrypter.decrypt(encrypted, iv: IV.allZerosOfLength(8)),
+        equals(text),
+      ),
+    );
   });
 
   group('RSA', () {
     final parser = RSAKeyParser();
-    final RSAPublicKey publicKey = parser
-        .parse(File('test/public.pem').readAsStringSync()) as RSAPublicKey;
-    final RSAPrivateKey privateKey = parser
-        .parse(File('test/private.pem').readAsStringSync()) as RSAPrivateKey;
+    final publicKey = parser.parse(publicPem) as RSAPublicKey;
+    final privateKey = parser.parse(privatePem) as RSAPrivateKey;
 
     test('encrypt/decrypt PKCS1', () {
       final encrypter = Encrypter(
@@ -188,12 +208,8 @@ void main() {
     });
 
     test('encrypt/decrypt OAEP (SHA512)', () {
-      final RSAPublicKey publicKey =
-          parser.parse(File('test/public2048.pem').readAsStringSync())
-              as RSAPublicKey;
-      final RSAPrivateKey privateKey =
-          parser.parse(File('test/private2048.pem').readAsStringSync())
-              as RSAPrivateKey;
+      final publicKey = parser.parse(public2048Pem) as RSAPublicKey;
+      final privateKey = parser.parse(private2048Pem) as RSAPrivateKey;
       final encrypter = Encrypter(
         RSA(
           publicKey: publicKey,

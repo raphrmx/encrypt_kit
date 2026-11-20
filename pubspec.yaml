@@ -1,25 +1,33 @@
-name: encrypt
-version: 5.0.4
-description: A set of high-level APIs over PointyCastle for two-way cryptography.
-repository: https://github.com/leocavalcante/encrypt
+name: encrypt_plus
+version: 6.0.0
+description: >-
+  Maintained, audited successor of the `encrypt` package: high-level APIs over
+  PointyCastle 4 for AES, ChaCha20-Poly1305, RSA, Salsa20, Fernet and signing.
+repository: https://github.com/raphrmx/encrypt_plus
+issue_tracker: https://github.com/raphrmx/encrypt_plus/issues
+topics:
+  - encryption
+  - cryptography
+  - aes
+  - rsa
+  - security
 
 executables:
   secure-random:
 
 environment:
-  sdk: '>=2.18.0 <4.0.0'
+  sdk: ^3.5.0
 
 dependencies:
-  args: ^2.3.1
-  asn1lib: ^1.5.0
+  args: ^2.5.0
+  asn1lib: ^1.5.3
   clock: ^1.1.1
-  collection: ^1.17.0
-  crypto: ^3.0.2
-  pointycastle: ^3.7.3
+  collection: ^1.18.0
+  pointycastle: ^4.0.0
 
 dev_dependencies:
-  lints: ^2.0.0
-  test: ^1.24.0
+  test: ^1.25.9
+  very_good_analysis: ^7.0.0
 
 false_secrets:
- - /test/*.pem
+  - /test/*.pem

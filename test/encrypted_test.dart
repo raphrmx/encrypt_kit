@@ -1,6 +1,6 @@
 import 'dart:typed_data';
 
-import 'package:encrypt/encrypt.dart';
+import 'package:encrypt_plus/encrypt.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -48,14 +48,16 @@ void main() {
     });
 
     test('Key.strech', () {
-      final desiredLength = 32;
+      const desiredLength = 32;
       final salt = Uint8List(16);
       final shortKey = Key.fromUtf8('short');
       final strechedKey = shortKey.stretch(desiredLength, salt: salt);
 
       expect(strechedKey.bytes.length, equals(desiredLength));
-      expect(strechedKey.base64,
-          equals('ykT8qFmrPp7TJyzY+E2NoBNjfWymzKOs1OCbRsO67fo='));
+      expect(
+        strechedKey.base64,
+        equals('ykT8qFmrPp7TJyzY+E2NoBNjfWymzKOs1OCbRsO67fo='),
+      );
     });
 
     test('Key.length', () {

@@ -1,13 +1,5 @@
-include: package:lints/core.yaml
+include: package:very_good_analysis/analysis_options.yaml
 
 analyzer:
-  language:
-    strict-casts: false
-
-linter:
-  rules:
-    - avoid_empty_else
-    - cancel_subscriptions
-    - close_sinks
-    - unnecessary_const
-    - unnecessary_new
+  exclude:
+    - "**/*.g.dart"

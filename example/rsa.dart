@@ -1,15 +1,18 @@
-import 'package:encrypt/encrypt.dart';
-import 'package:encrypt/encrypt_io.dart';
+// Examples print their results.
+// ignore_for_file: avoid_print
+
+import 'package:encrypt_plus/encrypt.dart';
+import 'package:encrypt_plus/encrypt_io.dart';
 import 'package:pointycastle/asymmetric/api.dart';
 
 void main() async {
   final publicKey = await parseKeyFromFile<RSAPublicKey>('test/public.pem');
   final privKey = await parseKeyFromFile<RSAPrivateKey>('test/private.pem');
-  final plainText = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit';
+  const plainText = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit';
   Encrypter encrypter;
   Encrypted encrypted;
   String decrypted;
-  
+
   // PKCS1 (Default)
   encrypter = Encrypter(RSA(publicKey: publicKey, privateKey: privKey));
   encrypted = encrypter.encrypt(plainText);
@@ -41,7 +44,7 @@ void main() async {
       privateKey: privKey,
       encoding: RSAEncoding.OAEP,
       digest: RSADigest.SHA256,
-    )
+    ),
   );
   encrypted = encrypter.encrypt(plainText);
   decrypted = encrypter.decrypt(encrypted);
