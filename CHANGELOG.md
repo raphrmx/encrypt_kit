@@ -1,3 +1,67 @@
+# 6.0.0
+
+First release of **encrypt_plus**, the maintained successor of
+[`encrypt`](https://pub.dev/packages/encrypt) 5.0.3 by Leo Cavalcante.
+
+Migrating: replace `encrypt` with `encrypt_plus` in `pubspec.yaml` and
+`package:encrypt/` with `package:encrypt_plus/` in imports. The public API is
+unchanged; only the behaviour changes listed under *Breaking* can affect you.
+
+## Dependencies
+
+- PointyCastle `^4.0.0` (was `^3.7.3`), Dart SDK `^3.5.0`.
+- The `crypto` dependency is gone (HMAC now comes from PointyCastle).
+
+## Security fixes
+
+- **AES-GCM with `padding: null` was not authenticated**: the cipher was run
+  block by block, so no tag was produced or checked and tampered cipher texts
+  decrypted silently. GCM now always appends and verifies the 16 byte tag.
+- Fernet compares HMACs in constant time (was a timing side channel).
+- Fernet rejects truncated or malformed tokens with `StateError('Invalid
+  token')` instead of a `RangeError`, before any decryption.
+- `RSASigner.verify` returns `false` for any malformed signature instead of
+  throwing, and compares in constant time.
+
+## Bug fixes
+
+- `RSASigner(RSASignDigest.SHA512)` crashed with a null check error.
+- `decodeHexString` (and `Encrypted.fromBase16`) silently dropped the last
+  character of an odd length input in release builds.
+- `RSAKeyParser` failed on PEM strings with leading blank lines or trailing
+  spaces, and reported malformed keys with assorted error types.
+- AES without padding now reports a partial block with a clear
+  `ArgumentError` instead of a `RangeError`.
+- `ChaCha20-Poly1305` is guarded on dart2js, where PointyCastle's Poly1305 is
+  unavailable, with an explicit `UnsupportedError`.
+
+## New features
+
+- `ChaCha20Poly1305` algorithm (RFC 8439 AEAD).
+- `RSAPSSSigner` for RSA-PSS signatures (PS256 / PS512).
+- `Key.fromPassword`: PBKDF2-HMAC-SHA256 key derivation (600 000 iterations
+  by default, mandatory salt of at least 16 bytes).
+- `generateRSAKeyPair` and `RSAKeyEncoder` (PEM export in PKCS#1 or PKCS#8).
+- `Encrypted.base64Url` (Fernet tokens and JWT use URL-safe base 64).
+- `package:encrypt_plus/encrypt_plus.dart` entry point (same exports as
+  `encrypt.dart`).
+
+## Breaking (behaviour only)
+
+- Cipher texts produced by 5.x with `AES(mode: AESMode.gcm, padding: null)`
+  have no tag and cannot be decrypted by 6.0.0. Decrypt them with 5.x and
+  re-encrypt. All other modes and paddings produce the same bytes as 5.x.
+- `decodeHexString` throws a `FormatException` on odd length input.
+- `RSAKeyParser.parse` throws a `FormatException` for every malformed key.
+
+## Quality
+
+- The library is split into regular Dart libraries instead of `part` files.
+- `very_good_analysis` lints, dartdoc on every public member.
+- 86 tests (was 50), including interoperability vectors generated with the
+  Python `cryptography` package, run on the VM, Chrome (dart2js) and
+  WebAssembly in CI.
+
 # 5.0.4
 
 - Force Pointycastle version

@@ -11,7 +11,7 @@ void main() {
   const messageAuthenticationCode = 'flutter is awesome';
 
   final key = Key.fromSecureRandom(32);
-  final iv = IV.fromSecureRandom(16);
+  final iv = IV.fromSecureRandom(12); // 96-bit nonce, new for every message
   final macValue = Uint8List.fromList(utf8.encode(messageAuthenticationCode));
 
   final encrypter = Encrypter(AES(key, mode: AESMode.gcm));

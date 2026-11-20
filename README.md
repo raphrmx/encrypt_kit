@@ -1,184 +1,205 @@
-> [!CAUTION]
-> I'm not being able to properly maintain this package, so it is being archived. Feel free to use some fork as an alternative.
+# encrypt_plus
 
-# encrypt
+[![pub package](https://img.shields.io/pub/v/encrypt_plus.svg)](https://pub.dev/packages/encrypt_plus)
+[![CI](https://github.com/raphrmx/encrypt_plus/actions/workflows/ci.yml/badge.svg)](https://github.com/raphrmx/encrypt_plus/actions/workflows/ci.yml)
+[![License: BSD-3-Clause](https://img.shields.io/badge/license-BSD--3--Clause-blue.svg)](LICENSE)
 
-[![Pub Package](https://img.shields.io/pub/v/encrypt.svg)](https://pub.dartlang.org/packages/encrypt)
-[![Dart CI](https://github.com/leocavalcante/encrypt/actions/workflows/dart.yaml/badge.svg)](https://github.com/leocavalcante/encrypt/actions/workflows/dart.yaml)
-[![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=E4F45BFVMFVQW)
+High-level APIs over [PointyCastle](https://pub.dev/packages/pointycastle) for
+two-way cryptography: AES, ChaCha20-Poly1305, RSA, Salsa20, Fernet, RSA
+signatures and password based keys.
 
-A set of high-level APIs over PointyCastle for two-way cryptography.
+**encrypt_plus is the maintained, audited successor of
+[`encrypt`](https://pub.dev/packages/encrypt)** by Leo Cavalcante, which is
+archived and stuck on PointyCastle 3. It keeps the same API, runs on
+PointyCastle 4, fixes the security issues found during an audit, and adds
+modern algorithms.
 
-> Looking for password hashing? Please, visit [password](https://github.com/leocavalcante/password-dart).
+## Migrating from `encrypt`
 
-### Secure random
-
-You can generate cryptographically secure random keys and IVs for you project.
-
-Activate the encrypt package:
-
-```bash
-pub global activate encrypt
+```yaml
+dependencies:
+  encrypt_plus: ^6.0.0
 ```
-
-Then use the `secure-random` command-line tool:
-
-```bash
-$ secure-random
-CBoaDQIQAgceGg8dFAkMDBEOECEZCxgMBiAUFQwKFhg=
-```
-
-You can set the length and the base output.
-
-```bash
-$ secure-random --help
--l, --length       The length of the bytes
-                   (defaults to "32")
-
--b, --base         Bytes represented as base 64 or base 16 (Hexdecimal)
-                   (defaults to "64")
-
--h, --[no-]help    Show this help message
-```
-
-## Algorithms
-
-Current status is:
-
-- AES with PKCS7 padding
-- RSA with PKCS1 and OAEP encoding
-- Salsa20
-
-### Signing
-
-- SHA256 with RSA
-
-## Usage
-
-### Symmetric
-
-#### AES
 
 ```dart
+// Before
 import 'package:encrypt/encrypt.dart';
+// After
+import 'package:encrypt_plus/encrypt.dart';
+```
+
+That is all for almost every project. Read the [CHANGELOG](CHANGELOG.md) for
+the three behaviour changes (the main one: AES-GCM with `padding: null` is now
+authenticated, as it always should have been).
+
+## Which algorithm should I use?
+
+| Need | Use |
+| --- | --- |
+| Encrypt data with a random key | `AES(key, mode: AESMode.gcm)` or `ChaCha20Poly1305(key)` |
+| Encrypt data with a password | `Key.fromPassword` + AES-GCM |
+| Exchange tokens with Python | `Fernet` |
+| Encrypt for someone else's public key | `RSA` with `RSAEncoding.OAEP` (small payloads, or wrap an AES key) |
+| Sign / verify | `RSAPSSSigner` (or `RSASigner` for PKCS#1 v1.5 / RS256) |
+
+Prefer **authenticated** modes (AES-GCM, ChaCha20-Poly1305, Fernet): the other
+AES modes and Salsa20 do not detect tampering or a wrong key. Never reuse an
+IV / nonce with the same key.
+
+## Symmetric encryption
+
+### AES-GCM
+
+```dart
+import 'package:encrypt_plus/encrypt.dart';
 
 void main() {
-  final plainText = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit';
-  final key = Key.fromUtf8('my 32 length key................');
-  final iv = IV.fromLength(16);
+  final key = Key.fromSecureRandom(32);
+  final iv = IV.fromSecureRandom(12); // new for every message
+  final encrypter = Encrypter(AES(key, mode: AESMode.gcm));
 
-  final encrypter = Encrypter(AES(key));
-
-  final encrypted = encrypter.encrypt(plainText, iv: iv);
+  final encrypted = encrypter.encrypt('Lorem ipsum', iv: iv);
   final decrypted = encrypter.decrypt(encrypted, iv: iv);
-
-  print(decrypted); // Lorem ipsum dolor sit amet, consectetur adipiscing elit
-  print(encrypted.base64); // R4PxiU3h8YoIRqVowBXm36ZcCeNeZ4s1OvVBTfFlZRdmohQqOpPQqD1YecJeZMAop/hZ4OxqgC1WtwvX/hP9mw==
 }
 ```
 
-##### Modes of operation
+Optional `associatedData` is authenticated but not encrypted. A tampered
+cipher text, wrong key, IV or associated data throws an
+`InvalidCipherTextException`.
 
-Default mode is SIC `AESMode.sic`, you can override it using the `mode` named parameter:
+#### Other modes
+
+`AES(key, mode: ...)` also supports `cbc`, `cfb64`, `ctr`, `ecb`, `ofb64`,
+`ofb64Gctr` and `sic` (the default, for compatibility). Pass `padding: null`
+to disable PKCS7 padding.
+
+### ChaCha20-Poly1305
 
 ```dart
-final encrypter = Encrypter(AES(key, mode: AESMode.cbc));
+final encrypter = Encrypter(ChaCha20Poly1305(Key.fromSecureRandom(32)));
+final nonce = IV.fromSecureRandom(12);
+final encrypted = encrypter.encrypt('Lorem ipsum', iv: nonce);
 ```
 
-###### Supported modes are:
+Available on the VM, Flutter native and WebAssembly. Not available when the
+web app is compiled to JavaScript (`ChaCha20Poly1305.isSupported`).
 
-- CBC `AESMode.cbc`
-- CFB-64 `AESMode.cfb64`
-- CTR `AESMode.ctr`
-- ECB `AESMode.ecb`
-- OFB-64/GCTR `AESMode.ofb64Gctr`
-- OFB-64 `AESMode.ofb64`
-- SIC `AESMode.sic`
-
-##### No/zero padding
-
-To remove padding, pass `null` to the `padding` named parameter on the constructor:
+### Key from a password
 
 ```dart
-final encrypter = Encrypter(AES(key, mode: AESMode.cbc, padding: null));
+final salt = SecureRandom(16).bytes; // store it with the cipher text
+final key = Key.fromPassword('correct horse battery staple', salt: salt);
 ```
 
-#### Salsa20
+PBKDF2-HMAC-SHA256 with 600 000 iterations by default (OWASP). It is slow on
+purpose: run it outside of the UI isolate when you can.
+
+### Fernet
+
+[Fernet](https://github.com/fernet/spec/blob/master/Spec.md) tokens are
+compatible with Python's `cryptography.fernet`.
 
 ```dart
-import 'package:encrypt/encrypt.dart';
-
-void main() {
-  final plainText = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit';
-  final key = Key.fromLength(32);
-  final iv = IV.fromLength(8);
-  final encrypter = Encrypter(Salsa20(key));
-
-  final encrypted = encrypter.encrypt(plainText, iv: iv);
-  final decrypted = encrypter.decrypt(encrypted, iv: iv);
-
-  print(decrypted); // Lorem ipsum dolor sit amet, consectetur adipiscing elit
-  print(encrypted.base64); // CR+IAWBEx3sA/dLkkFM/orYr9KftrGa7lIFSAAmVPbKIOLDOzGwEi9ohstDBqDLIaXMEeulwXQ==
-}
+final fernet = Fernet(Key.fromBase64(urlSafeBase64Key));
+final token = Encrypter(fernet).encrypt('Lorem ipsum').base64Url;
+final plain = fernet.decrypt(Encrypted.fromBase64(token), ttl: 3600);
 ```
 
-#### [Fernet](https://github.com/fernet/spec/blob/master/Spec.md)
+### Salsa20
 
 ```dart
-import 'package:encrypt/encrypt.dart';
-import 'dart:convert';
-
-void main() {
-  final plainText = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit';
-  final key = Key.fromUtf8('my32lengthsupersecretnooneknows1');
-
-  final b64key = Key.fromUtf8(base64Url.encode(key.bytes).substring(0,32));
-  // if you need to use the ttl feature, you'll need to use APIs in the algorithm itself
-  final fernet = Fernet(b64key);
-  final encrypter = Encrypter(fernet);
-
-  final encrypted = encrypter.encrypt(plainText);
-  final decrypted = encrypter.decrypt(encrypted);
-
-  print(decrypted); // Lorem ipsum dolor sit amet, consectetur adipiscing elit
-  print(encrypted.base64); // random cipher text
-  print(fernet.extractTimestamp(encrypted.bytes)); // unix timestamp
-}
+final encrypter = Encrypter(Salsa20(Key.fromSecureRandom(32)));
+final iv = IV.fromSecureRandom(8);
+final encrypted = encrypter.encrypt('Lorem ipsum', iv: iv);
 ```
 
-### Asymmetric
+## RSA
 
-#### RSA
+### Keys
 
 ```dart
-import 'dart:io';
-import 'package:encrypt/encrypt.dart';
+import 'package:encrypt_plus/encrypt.dart';
+import 'package:encrypt_plus/encrypt_io.dart'; // VM / Flutter native only
 import 'package:pointycastle/asymmetric/api.dart';
 
-void main() {
-  final publicKey = await parseKeyFromFile<RSAPublicKey>('test/public.pem');
-  final privKey = await parseKeyFromFile<RSAPrivateKey>('test/private.pem');
+final publicKey = await parseKeyFromFile<RSAPublicKey>('public.pem');
+final privateKey = RSAKeyParser().parse(privatePem) as RSAPrivateKey;
 
-  final plainText = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit';
-  final encrypter = Encrypter(RSA(publicKey: publicKey, privateKey: privKey));
-
-  final encrypted = encrypter.encrypt(plainText);
-  final decrypted = encrypter.decrypt(encrypted);
-
-  print(decrypted); // Lorem ipsum dolor sit amet, consectetur adipiscing elit
-  print(encrypted.base64); // kO9EbgbrSwiq0EYz0aBdljHSC/rci2854Qa+nugbhKjidlezNplsEqOxR+pr1RtICZGAtv0YGevJBaRaHS17eHuj7GXo1CM3PR6pjGxrorcwR5Q7/bVEePESsimMbhHWF+AkDIX4v0CwKx9lgaTBgC8/yJKiLmQkyDCj64J3JSE=
-}
+// Generate and export
+final pair = generateRSAKeyPair(bitLength: 3072);
+final pem = RSAKeyEncoder.encodePublicKey(pair.publicKey);
 ```
 
-### Signature and verification
-
-#### RSA
+### Encryption
 
 ```dart
- final publicKey = await parseKeyFromFile<RSAPublicKey>('test/public.pem');
- final privateKey = await parseKeyFromFile<RSAPrivateKey>('test/private.pem');
- final signer = Signer(RSASigner(RSASignDigest.SHA256, publicKey: publicKey, privateKey: privateKey));
-
- print(signer.sign('hello world').base64);
- print(signer.verify64('hello world', 'jfMhNM2v6hauQr6w3ji0xNOxGInHbeIH3DHlpf2W3vmSMyAuwGHG0KLcunggG4XtZrZPAib7oHaKEAdkHaSIGXAtEqaAvocq138oJ7BEznA4KVYuMcW9c8bRy5E4tUpikTpoO+okHdHr5YLc9y908CAQBVsfhbt0W9NClvDWegs='));
+final encrypter = Encrypter(
+  RSA(
+    publicKey: publicKey,
+    privateKey: privateKey,
+    encoding: RSAEncoding.OAEP,
+    digest: RSADigest.SHA256,
+  ),
+);
+final encrypted = encrypter.encrypt('Lorem ipsum');
 ```
+
+### Signatures
+
+```dart
+// RSA-PSS (PS256), recommended
+final signer = Signer(
+  RSAPSSSigner(RSASignDigest.SHA256, publicKey: publicKey, privateKey: privateKey),
+);
+
+// PKCS#1 v1.5 (RS256 / RS512)
+final legacy = Signer(
+  RSASigner(RSASignDigest.SHA256, publicKey: publicKey, privateKey: privateKey),
+);
+
+final signature = signer.sign('hello world');
+signer.verify('hello world', signature); // true
+```
+
+## Secure random
+
+```dart
+final bytes = SecureRandom(32).bytes;
+```
+
+Or from the command line:
+
+```bash
+dart pub global activate encrypt_plus
+secure-random --length 32 --base 64
+```
+
+## Name clashes with PointyCastle
+
+`SecureRandom`, `Signer`, `RSASigner`, `Algorithm` and `ChaCha20Poly1305`
+exist in both packages. If you import `package:pointycastle/export.dart` too,
+hide the ones you do not use:
+
+```dart
+import 'package:pointycastle/export.dart' hide RSASigner, Signer;
+```
+
+## Platform support
+
+| | VM / Flutter native | Web (JavaScript) | Web (WebAssembly) |
+| --- | --- | --- | --- |
+| Everything else | ✅ | ✅ | ✅ |
+| ChaCha20-Poly1305 | ✅ | ❌ | ✅ |
+| `encrypt_io.dart` | ✅ | ❌ | ❌ |
+
+## Security
+
+See [AUDIT.md](AUDIT.md) for the issues found and fixed when taking over the
+package. Report vulnerabilities privately through
+[GitHub security advisories](https://github.com/raphrmx/encrypt_plus/security/advisories/new).
+
+## Credits
+
+Originally written by [Leo Cavalcante](https://github.com/leocavalcante) and
+the `encrypt` contributors, under the BSD 3-Clause license. Maintained since
+2026 by [Raphaël Vrient](https://github.com/raphrmx).

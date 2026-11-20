@@ -1,22 +1,16 @@
-# .github/workflows/publish.yml
+# Publishes to pub.dev when a tag like v6.0.1 is pushed.
+# Requires automated publishing to be enabled on pub.dev for this repository
+# (Admin tab, tag pattern "v{{version}}"). The very first release must be
+# published manually with `dart pub publish`.
 name: Publish to pub.dev
 
 on:
   push:
     tags:
-    # must align with the tag-pattern configured on pub.dev, often just replace
-    #  with [0-9]+.[0-9]+.[0-9]+*
-    - 'v[0-9]+.[0-9]+.[0-9]+*' # tag-pattern on pub.dev: 'v'
-    # If you prefer tags like '1.2.3', without the 'v' prefix, then use:
-    # - '[0-9]+.[0-9]+.[0-9]+*' # tag-pattern on pub.dev: ''
-    # If your repository contains multiple packages consider a pattern like:
-    # - 'my_package_name-v[0-9]+.[0-9]+.[0-9]+*'
+      - 'v[0-9]+.[0-9]+.[0-9]+*'
 
-# Publish using the reusable workflow from dart-lang.
 jobs:
   publish:
     permissions:
-      id-token: write # Required for authentication using OIDC
+      id-token: write
     uses: dart-lang/setup-dart/.github/workflows/publish.yml@v1
-    # with:
-    #   working-directory: path/to/package/within/repository
