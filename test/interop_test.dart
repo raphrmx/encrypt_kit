@@ -5,7 +5,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:clock/clock.dart';
-import 'package:encrypt_plus/encrypt.dart';
+import 'package:encrypt_kit/encrypt.dart';
 import 'package:pointycastle/asymmetric/api.dart';
 import 'package:test/test.dart';
 

@@ -1,6 +1,6 @@
 import 'dart:typed_data';
 
-import 'package:encrypt_plus/encrypt.dart';
+import 'package:encrypt_kit/encrypt.dart';
 import 'package:test/test.dart';
 
 void main() {

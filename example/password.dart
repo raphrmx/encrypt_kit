@@ -1,7 +1,7 @@
 // Examples print their results.
 // ignore_for_file: avoid_print
 
-import 'package:encrypt_plus/encrypt.dart';
+import 'package:encrypt_kit/encrypt.dart';
 
 void main() {
   // Store the salt and the nonce next to the cipher text: both are public.

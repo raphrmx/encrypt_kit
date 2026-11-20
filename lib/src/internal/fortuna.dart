@@ -1,4 +1,4 @@
-import 'package:encrypt_plus/src/secure_random.dart' as encrypt;
+import 'package:encrypt_kit/src/secure_random.dart' as encrypt;
 import 'package:pointycastle/api.dart' show KeyParameter, SecureRandom;
 import 'package:pointycastle/random/fortuna_random.dart';
 

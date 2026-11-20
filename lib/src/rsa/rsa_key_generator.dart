@@ -1,4 +1,4 @@
-import 'package:encrypt_plus/src/internal/fortuna.dart';
+import 'package:encrypt_kit/src/internal/fortuna.dart';
 import 'package:pointycastle/api.dart'
     show AsymmetricKeyPair, ParametersWithRandom;
 import 'package:pointycastle/asymmetric/api.dart';

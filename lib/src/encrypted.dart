@@ -5,8 +5,8 @@ import 'dart:convert' as convert;
 import 'dart:typed_data';
 
 import 'package:collection/collection.dart';
-import 'package:encrypt_plus/src/secure_random.dart';
-import 'package:encrypt_plus/src/utils.dart';
+import 'package:encrypt_kit/src/secure_random.dart';
+import 'package:encrypt_kit/src/utils.dart';
 import 'package:pointycastle/digests/sha1.dart';
 import 'package:pointycastle/digests/sha256.dart';
 import 'package:pointycastle/key_derivators/api.dart';

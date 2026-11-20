@@ -1,10 +1,10 @@
 import 'dart:typed_data';
 
 import 'package:clock/clock.dart';
-import 'package:encrypt_plus/src/algorithm.dart';
-import 'package:encrypt_plus/src/algorithms/aes.dart';
-import 'package:encrypt_plus/src/encrypted.dart';
-import 'package:encrypt_plus/src/utils.dart';
+import 'package:encrypt_kit/src/algorithm.dart';
+import 'package:encrypt_kit/src/algorithms/aes.dart';
+import 'package:encrypt_kit/src/encrypted.dart';
+import 'package:encrypt_kit/src/utils.dart';
 import 'package:pointycastle/api.dart' show KeyParameter;
 import 'package:pointycastle/digests/sha256.dart';
 import 'package:pointycastle/macs/hmac.dart';

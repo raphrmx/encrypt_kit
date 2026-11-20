@@ -1,10 +1,10 @@
-name: encrypt_plus
+name: encrypt_kit
 version: 6.0.0
 description: >-
   Maintained, audited successor of the `encrypt` package: high-level APIs over
   PointyCastle 4 for AES, ChaCha20-Poly1305, RSA, Salsa20, Fernet and signing.
-repository: https://github.com/raphrmx/encrypt_plus
-issue_tracker: https://github.com/raphrmx/encrypt_plus/issues
+repository: https://github.com/raphrmx/encrypt_kit
+issue_tracker: https://github.com/raphrmx/encrypt_kit/issues
 topics:
   - encryption
   - cryptography

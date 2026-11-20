@@ -1,4 +1,4 @@
-# encrypt_plus examples
+# encrypt_kit examples
 
 - [AES](aes.dart)
 - [AES-GCM](aes_gcm.dart)

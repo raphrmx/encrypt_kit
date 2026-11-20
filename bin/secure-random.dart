@@ -4,7 +4,7 @@
 import 'dart:io';
 
 import 'package:args/args.dart';
-import 'package:encrypt_plus/encrypt.dart';
+import 'package:encrypt_kit/encrypt.dart';
 
 /// Prints cryptographically secure random bytes in base 64 or base 16.
 void main(List<String> args) {

@@ -1,11 +1,11 @@
 /// High-level, two-way cryptography APIs built on top of PointyCastle.
 ///
 /// This library is a drop-in replacement for `package:encrypt/encrypt.dart`:
-/// replacing the import with `package:encrypt_plus/encrypt.dart` is enough to
+/// replacing the import with `package:encrypt_kit/encrypt.dart` is enough to
 /// migrate.
 ///
 /// ```dart
-/// import 'package:encrypt_plus/encrypt.dart';
+/// import 'package:encrypt_kit/encrypt.dart';
 ///
 /// final key = Key.fromSecureRandom(32);
 /// final iv = IV.fromSecureRandom(12);

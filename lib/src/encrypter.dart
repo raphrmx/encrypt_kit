@@ -1,8 +1,8 @@
 import 'dart:convert' as convert;
 import 'dart:typed_data';
 
-import 'package:encrypt_plus/src/algorithm.dart';
-import 'package:encrypt_plus/src/encrypted.dart';
+import 'package:encrypt_kit/src/algorithm.dart';
+import 'package:encrypt_kit/src/encrypted.dart';
 
 /// Front-end over an [Algorithm] working with strings and byte lists.
 ///

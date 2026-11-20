@@ -1,7 +1,7 @@
-# encrypt_plus
+# encrypt_kit
 
-[![pub package](https://img.shields.io/pub/v/encrypt_plus.svg)](https://pub.dev/packages/encrypt_plus)
-[![CI](https://github.com/raphrmx/encrypt_plus/actions/workflows/ci.yml/badge.svg)](https://github.com/raphrmx/encrypt_plus/actions/workflows/ci.yml)
+[![pub package](https://img.shields.io/pub/v/encrypt_kit.svg)](https://pub.dev/packages/encrypt_kit)
+[![CI](https://github.com/raphrmx/encrypt_kit/actions/workflows/ci.yml/badge.svg)](https://github.com/raphrmx/encrypt_kit/actions/workflows/ci.yml)
 
 A set of high-level APIs over PointyCastle for two-way cryptography.
 
@@ -10,10 +10,10 @@ Cavalcante, updated to PointyCastle 4.
 
 ## Migrating from encrypt
 
-Replace `encrypt` with `encrypt_plus` in `pubspec.yaml` and update the imports:
+Replace `encrypt` with `encrypt_kit` in `pubspec.yaml` and update the imports:
 
 ```dart
-import 'package:encrypt_plus/encrypt.dart';
+import 'package:encrypt_kit/encrypt.dart';
 ```
 
 See the [CHANGELOG](CHANGELOG.md) for the changes.
@@ -32,7 +32,7 @@ See the [CHANGELOG](CHANGELOG.md) for the changes.
 ### AES
 
 ```dart
-import 'package:encrypt_plus/encrypt.dart';
+import 'package:encrypt_kit/encrypt.dart';
 
 void main() {
   final key = Key.fromSecureRandom(32);
@@ -47,8 +47,8 @@ void main() {
 ### RSA
 
 ```dart
-import 'package:encrypt_plus/encrypt.dart';
-import 'package:encrypt_plus/encrypt_io.dart';
+import 'package:encrypt_kit/encrypt.dart';
+import 'package:encrypt_kit/encrypt_io.dart';
 import 'package:pointycastle/asymmetric/api.dart';
 
 Future<void> main() async {
@@ -72,7 +72,7 @@ More in the [example](example) folder.
 ### Secure random
 
 ```bash
-dart pub global activate encrypt_plus
+dart pub global activate encrypt_kit
 secure-random --length 32
 ```
 

@@ -3,7 +3,7 @@
 
 import 'dart:typed_data';
 
-import 'package:encrypt_plus/encrypt.dart';
+import 'package:encrypt_kit/encrypt.dart';
 
 void main() {
   final salt = Uint8List(16);

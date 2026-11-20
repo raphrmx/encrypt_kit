@@ -2,7 +2,7 @@ import 'dart:convert' as convert;
 import 'dart:math';
 import 'dart:typed_data';
 
-import 'package:encrypt_plus/src/utils.dart';
+import 'package:encrypt_kit/src/utils.dart';
 
 /// A sequence of cryptographically secure random bytes.
 ///

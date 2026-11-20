@@ -5,7 +5,7 @@ library;
 
 import 'dart:io';
 
-import 'package:encrypt_plus/encrypt.dart';
+import 'package:encrypt_kit/encrypt.dart';
 import 'package:pointycastle/asymmetric/api.dart';
 
 /// Reads and parses the PEM encoded RSA key stored in [filename].

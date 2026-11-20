@@ -1,6 +1,6 @@
 import 'dart:typed_data';
 
-import 'package:encrypt_plus/src/encrypted.dart';
+import 'package:encrypt_kit/src/encrypted.dart';
 
 /// Interface implemented by every two-way encryption algorithm.
 ///
