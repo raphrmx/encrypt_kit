@@ -1,5 +1,5 @@
 name: encrypt_kit
-version: 6.0.0
+version: 6.0.1
 description: >-
   Maintained, audited successor of the `encrypt` package: high-level APIs over
   PointyCastle 4 for AES, ChaCha20-Poly1305, RSA, Salsa20, Fernet and signing.

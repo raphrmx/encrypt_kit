@@ -1,8 +1,11 @@
+# 6.0.1
+
+- Remove the `collection` dependency.
+
 # 6.0.0
 
 - Forked from `encrypt` 5.0.3 and renamed to `encrypt_kit`.
-- Update to PointyCastle 4 and Dart 3.5. Remove the `crypto` and `collection`
-  dependencies.
+- Update to PointyCastle 4 and Dart 3.5. Remove the `crypto` dependency.
 - Fix AES-GCM without padding not appending/verifying the authentication tag.
   **Breaking:** data encrypted with `AES(mode: AESMode.gcm, padding: null)` by
   older versions cannot be decrypted anymore.
