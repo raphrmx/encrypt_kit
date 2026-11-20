@@ -36,6 +36,25 @@ String encodeHexString(List<int> bytes) {
   return buffer.toString();
 }
 
+/// Returns whether [a] and [b] contain the same bytes.
+///
+/// Returns as soon as a difference is found: use [constantTimeEquals] to
+/// compare secrets.
+bool bytesEqual(List<int> a, List<int> b) {
+  if (identical(a, b)) {
+    return true;
+  }
+  if (a.length != b.length) {
+    return false;
+  }
+  for (var i = 0; i < a.length; i++) {
+    if (a[i] != b[i]) {
+      return false;
+    }
+  }
+  return true;
+}
+
 /// Compares [a] and [b] in a time that only depends on their lengths.
 ///
 /// Must be used to compare secrets such as MACs or signatures to avoid

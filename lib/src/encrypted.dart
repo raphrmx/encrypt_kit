@@ -4,7 +4,6 @@
 import 'dart:convert' as convert;
 import 'dart:typed_data';
 
-import 'package:collection/collection.dart';
 import 'package:encrypt_kit/src/secure_random.dart';
 import 'package:encrypt_kit/src/utils.dart';
 import 'package:pointycastle/digests/sha1.dart';
@@ -74,13 +73,13 @@ class Encrypted {
       return true;
     }
     if (other is Encrypted) {
-      return const ListEquality<int>().equals(bytes, other.bytes);
+      return bytesEqual(bytes, other.bytes);
     }
     return false;
   }
 
   @override
-  int get hashCode => const ListEquality<int>().hash(bytes);
+  int get hashCode => Object.hashAll(bytes);
 }
 
 /// An initialization vector (or nonce).
